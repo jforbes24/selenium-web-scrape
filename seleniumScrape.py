@@ -28,7 +28,7 @@ for x in range(1,6):
         user_agent = random.choice(user_agent_list)
         # set the headers
         headers = {'User-Agent' : user_agent}
-        result = requests.get(f"https://www.diy.com/departments/lighting/indoor-lights/floor-lamps/DIY579453.cat?page={x}", headers=headers)
+        result = requests.get(f"https://www.diy.com/departments/flooring-tiling/flooring-underlay/laminate-flooring/DIY566433.cat?page={x}", headers=headers)
 
 # response status
 print(result.status_code)
@@ -40,7 +40,7 @@ chrome_options.add_argument(" - incognito")
 driver = webdriver.Chrome(path, options=chrome_options)
 
 # select url link
-url = "https://www.diy.com/departments/lighting/indoor-lights/floor-lamps/DIY579453.cat?"
+url = "https://www.diy.com/departments/flooring-tiling/flooring-underlay/laminate-flooring/DIY566433.cat"
 driver.get(url)
 
 # accept cookies
@@ -51,37 +51,51 @@ driver.switch_to.default_content()
 
 time.sleep(5)
 
+# list criteria
 products = [] # list to store name of the product
 links = [] # list to store link of the product
 prices = [] # list to store price of the product
+unitPrices = [] # list to store unit price of the product
 ratings = [] # list to store rating of the product
+eans = [] # list to store EAN of the product
+reviewNums = [] # list to store number of product reviews
+reviews = [] # list to store reviews of product
+availability = []
+
 # baseurl = 'https://www.diy.com/'
 
 
-lights = driver.find_elements_by_css_selector('.b9bdc658')
+flooring = driver.find_elements_by_css_selector('.b9bdc658')
 
 
 # get product info
-for i in lights:
-    title = i.find_element_by_css_selector('p').text
-    link = i.find_elements_by_tag_name('a')
+for f in flooring:
+    title = f.find_element_by_css_selector('p').text
+    link = f.find_elements_by_tag_name('a')
     for l in link:
         links.append(l.get_attribute('href'))
-    # price = i.find_element_by_css_selector('div.b25ad5d5 _4e80f7be _23ee746f _7b343263 > span').text
+    price = f.find_element_by_xpath('.//div[@class="b25ad5d5 _4e80f7be _23ee746f _7b343263"]').text
+    unitPrice = f.find_element_by_xpath('.//div[@class="b00398fe b1bfb616"]').text
+    rating = f.find_element_by_xpath('.//div[@class="_45e852d0 _6418d197 _2263bdd0"]').text
+    reviewNum = f.find_element_by_xpath('.//span[@class="ccb9d67a _17d3fa36 _50344329 b1bfb616 cc6bbaee"]').text
     products.append(title)
-    # prices.append(price)
-print(products, links, prices)
+    prices.append(price)
+    unitPrices.append(unitPrice)
+    ratings.append(rating)
+    reviewNums.append(reviewNum)
+    
+    # ean
+    # reviews
+    # available
+print(products, links, prices, unitPrices, reviewNums, ratings)
 
-# driver.find_element_by_css_selector("div.pv-entity__summary-info > h3").text
-# driver.find_element_by_css_selector("div.pv-entity__summary-info span.pv-entity__secondary-title").text
+# click through more product pages
+
+# driver.find_element_by_xpath('//span[@class="e433fa60 f9f4120c').click()
 
 """
 
-# get top lvl product view
-for light in lights:
-    products = light.find_elements_by_class_name('li')
-    price = light.find_element_by_xpath('.//*[@id="content"]/div/div[1]/div/div/div[3]/div/div[3]/div[2]/main/div/ul/li[1]/div/a/div[2]/div/div[2]/div/div[2]/div/span[2]').text
-    print(price)
+
 """
 driver.close()    
 
