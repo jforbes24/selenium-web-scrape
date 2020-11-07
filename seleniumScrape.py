@@ -39,8 +39,9 @@ chrome_options = Options()
 chrome_options.add_argument(" - incognito")
 driver = webdriver.Chrome(path, options=chrome_options)
 
+
 # select url link
-url = "https://www.diy.com/departments/flooring-tiling/flooring-underlay/laminate-flooring/DIY566433.cat"
+url = "https://www.diy.com/departments/flooring-tiling/flooring-underlay/laminate-flooring/DIY566433.cat?page={x}"
 driver.get(url)
 
 # accept cookies
@@ -62,11 +63,11 @@ reviewNums = [] # list to store number of product reviews
 reviews = [] # list to store reviews of product
 availability = []
 
+page=2
+
 # baseurl = 'https://www.diy.com/'
 
-
 flooring = driver.find_elements_by_css_selector('.b9bdc658')
-
 
 # get product info
 for f in flooring:
@@ -83,18 +84,30 @@ for f in flooring:
     unitPrices.append(unitPrice)
     ratings.append(rating)
     reviewNums.append(reviewNum)
-    
-    # ean
-    # reviews
-    # available
-print(products, links, prices, unitPrices, reviewNums, ratings)
 
+# ean
+# reviews
+# available
+# print(products, links, prices, unitPrices, reviewNums, ratings)
+
+# compile dictionary of metrics
+d = {'Products':products,
+     'URL':links,
+     'Prices':prices,
+     'Unit_Prices':unitPrices,
+     'Review_qty':reviewNums,
+     }
+
+print(len(links))
+"""
+# create dataframe
+df = pd.DataFrame(d)
+pd.set_option('display.max_columns', 100)
+
+print(df)
 # click through more product pages
 
 # driver.find_element_by_xpath('//span[@class="e433fa60 f9f4120c').click()
-
-"""
-
 
 """
 driver.close()    
