@@ -41,21 +41,7 @@ driver = webdriver.Chrome(path, options=chrome_options)
 
 productInfo = []
 
-for x in range(1,6):
-    # select url link
-    url = "https://www.diy.com/departments/flooring-tiling/flooring-underlay/laminate-flooring/DIY566433.cat?page="
-    driver.get(url+str(x))
 
-    try:
-        # accept cookies
-        WebDriverWait(driver,10).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,'//iframe[@title="TrustArc Cookie Consent Manager"]')))
-        WebDriverWait(driver,10).until(EC.element_to_be_clickable((By.XPATH,"//a[@class='call'][text()='Accept Cookies']"))).click()
-
-        driver.switch_to.default_content()
-    except:
-        break
-    
-    time.sleep(5)
 
     # baseurl = 'https://www.diy.com/'
 
@@ -69,9 +55,6 @@ def scrape():
         l = []
         for link in testLink:
             l.append(link.get_attribute('href'))
-        """ link = f.find_elements_by_tag_name('a')
-        for l in link:
-            products.append(l.get_attribute('href'))"""
         price = f.find_element_by_xpath('.//div[@class="b25ad5d5 _4e80f7be _23ee746f _7b343263"]').text
         unitPrice = f.find_element_by_xpath('.//div[@class="b00398fe b1bfb616"]').text
         rating = f.find_element_by_xpath('.//div[@class="_45e852d0 _6418d197 _2263bdd0"]').text
@@ -79,7 +62,6 @@ def scrape():
 
         products = {
             'title': title,
-            # 'testLink': testLink,
             'link': l,
             'price': price,
             'unitPrice': unitPrice,
@@ -89,8 +71,29 @@ def scrape():
 
         productInfo.append(products)
 
+# load home-page
+url = "https://www.diy.com/"
+driver.get(url)
+
+# accept cookies
+WebDriverWait(driver,10).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,'//iframe[@title="TrustArc Cookie Consent Manager"]')))
+WebDriverWait(driver,10).until(EC.element_to_be_clickable((By.XPATH,"//a[@class='call'][text()='Accept Cookies']"))).click()
+driver.switch_to.default_content()
+
 # call scrape function
-scrape()
+for x in range(1,4):
+    # select url link
+    url = "https://www.diy.com/departments/flooring-tiling/flooring-underlay/laminate-flooring/DIY566433.cat?page="
+    driver.get(url+str(x))
+    try:     
+        time.sleep(5)
+        scrape()
+        time.sleep(5)
+    except:
+        time.sleep(5)
+        print('exception raised')
+    
+    time.sleep(5)
 
 # return length of results
 print(len(productInfo))
